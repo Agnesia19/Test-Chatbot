@@ -39,9 +39,10 @@ for message in st.session_state.messages:
 #     chatbot = hugchat.ChatBot(cookies=cookies.get_dict())
 #     return chatbot.chat(prompt_input)
 
+    
 def generate_response(prompt_input, email, passwd):
     try:
-        sign = login(email, passwd)
+        sign = Login(email, passwd)
         cookies = sign.login()
         chatbot = hugchat.ChatBot(cookies=cookies.get_dict())
         return chatbot.chat(prompt_input)
