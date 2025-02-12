@@ -40,14 +40,32 @@ for message in st.session_state.messages:
 #     return chatbot.chat(prompt_input)
 
     
+# def generate_response(prompt_input, email, passwd):
+#     try:
+#         sign = Login(email, passwd)
+#         cookies = sign.login()
+#         chatbot = hugchat.ChatBot(cookies=cookies.get_dict())
+#         return chatbot.chat(prompt_input)
+#     except Exception as e:
+#         print(f"Error: {str(e)}")  # Untuk debugging
+#         return f"Error occurred: {str(e)}"
+
 def generate_response(prompt_input, email, passwd):
     try:
         sign = Login(email, passwd)
+        print("Login step passed")  # Debug print
+        
         cookies = sign.login()
+        print("Cookie generation passed")  # Debug print
+        
         chatbot = hugchat.ChatBot(cookies=cookies.get_dict())
+        print("ChatBot creation passed")  # Debug print
+        
         return chatbot.chat(prompt_input)
     except Exception as e:
-        print(f"Error: {str(e)}")  # Untuk debugging
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"Detailed error: {error_details}")  # This will show in your logs
         return f"Error occurred: {str(e)}"
 
 # User-provided prompt
