@@ -30,14 +30,14 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
 
-# Function for generating LLM response
-# def generate_response(prompt_input, email, passwd):
-#     # Hugging Face Login
-#     sign = Login(email, passwd)
-#     cookies = sign.login()
-#     # Create ChatBot                        
-#     chatbot = hugchat.ChatBot(cookies=cookies.get_dict())
-#     return chatbot.chat(prompt_input)
+Function for generating LLM response
+def generate_response(prompt_input, email, passwd):
+    # Hugging Face Login
+    sign = Login(email, passwd)
+    cookies = sign.login()
+    # Create ChatBot                        
+    chatbot = hugchat.ChatBot(cookies=cookies.get_dict())
+    return chatbot.chat(prompt_input)
 
     
 # def generate_response(prompt_input, email, passwd):
@@ -50,23 +50,7 @@ for message in st.session_state.messages:
 #         print(f"Error: {str(e)}")  # Untuk debugging
 #         return f"Error occurred: {str(e)}"
 
-def generate_response(prompt_input, email, passwd):
-    try:
-        sign = Login(email, passwd)
-        print("Login step passed")  # Debug print
-        
-        cookies = sign.login()
-        print("Cookie generation passed")  # Debug print
-        
-        chatbot = hugchat.ChatBot(cookies=cookies.get_dict())
-        print("ChatBot creation passed")  # Debug print
-        
-        return chatbot.chat(prompt_input)
-    except Exception as e:
-        import traceback
-        error_details = traceback.format_exc()
-        print(f"Detailed error: {error_details}")  # This will show in your logs
-        return f"Error occurred: {str(e)}"
+
 
 # User-provided prompt
 if prompt := st.chat_input(disabled=not (hf_email and hf_pass)):
