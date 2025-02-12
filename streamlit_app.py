@@ -30,7 +30,7 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
 
-Function for generating LLM response
+# Function for generating LLM response
 def generate_response(prompt_input, email, passwd):
     # Hugging Face Login
     sign = Login(email, passwd)
