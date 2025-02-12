@@ -30,27 +30,14 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
 
-# # Function for generating LLM response
-# def generate_response(prompt_input, email, passwd):
-#     # Hugging Face Login
-#     sign = Login(email, passwd)
-#     cookies = sign.login()
-#     # Create ChatBot                        
-#     chatbot = hugchat.ChatBot(cookies=cookies.get_dict())
-#     return chatbot.chat(prompt_input)
-
-    
+# Function for generating LLM response
 def generate_response(prompt_input, email, passwd):
-    try:
-        sign = Login(email, passwd)
-        cookies = sign.login()
-        chatbot = hugchat.ChatBot(cookies=cookies.get_dict())
-        return chatbot.chat(prompt_input)
-    except Exception as e:
-        print(f"Error: {str(e)}")  # Untuk debugging
-        return f"Error occurred: {str(e)}"
-
-
+    # Hugging Face Login
+    sign = Login(email, passwd)
+    cookies = sign.login()
+    # Create ChatBot                        
+    chatbot = hugchat.ChatBot(cookies=cookies.get_dict())
+    return chatbot.chat(prompt_input)
 
 # User-provided prompt
 if prompt := st.chat_input(disabled=not (hf_email and hf_pass)):
