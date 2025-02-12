@@ -1,70 +1,69 @@
 import streamlit as st
 from hugchat import hugchat
 from hugchat.login import Login
-# App title
-st.set_page_config(page_title="🤗💬 HugChat")
 
-# Hugging Face Credentials
-with st.sidebar:
-    st.title('🤗💬 HugChat')
-    if ('EMAIL' in st.secrets) and ('PASS' in st.secrets):
-        st.success('HuggingFace Login credentials already provided!', icon='✅')
-        hf_email = st.secrets['EMAIL']
-        hf_pass = st.secrets['PASS']
-    else:
-        hf_email = st.text_input('Enter E-mail:', type='password')
-        hf_pass = st.text_input('Enter password:', type='password')
-        if not (hf_email and hf_pass):
-            st.warning('Please enter your credentials!', icon='⚠️')
-        else:
-            st.success('Proceed to entering your prompt message!', icon='👉')
-    st.markdown('📖 Learn how to build this app in this [blog](https://blog.streamlit.io/how-to-build-an-llm-powered-chatbot-with-streamlit/)!')
-    
-# Store LLM generated responses
-if "messages" not in st.session_state.keys():
-    st.session_state.messages = [{"role": "assistant", "content": "How may I help you?"}]
+st.title("💬 HugChat Indonesia")
 
-# Display chat messages
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.write(message["content"])
+# Inisialisasi session state untuk menyimpan pesan
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-# Function for generating LLM response
-# def generate_response(prompt_input, email, passwd):
-#     # Hugging Face Login
-#     sign = Login(email, passwd)
-#     cookies = sign.login()
-#     # Create ChatBot                        
-#     chatbot = hugchat.ChatBot(cookies=cookies.get_dict())
-#     return chatbot.chat(prompt_input)
+# Form input untuk login
+st.sidebar.title("📧 Login HugChat")
+st.sidebar.markdown("Masukkan akun HuggingFace Anda")
+
+hf_email = st.sidebar.text_input("Masukkan Email:", type="default")
+hf_pass = st.sidebar.text_input("Masukkan Password:", type="password")
+
+if st.sidebar.button("👉 Mulai Chat", type="primary"):
+    st.session_state.messages = []
+    st.sidebar.success("Berhasil Login!")
+
 def generate_response(prompt_input, email, passwd):
     try:
+        # Tambahkan instruksi untuk bahasa Indonesia
+        modified_prompt = f"Tolong jawab dalam Bahasa Indonesia: {prompt_input}"
+        
         sign = Login(email, passwd)
-        print("Login step passed")  # Debug print
-        
         cookies = sign.login()
-        print("Cookie generation passed")  # Debug print
-        
         chatbot = hugchat.ChatBot(cookies=cookies.get_dict())
-        print("ChatBot creation passed")  # Debug print
         
-        return chatbot.chat(prompt_input)
+        # Set default ke Bahasa Indonesia
+        chatbot.chat("Mulai sekarang, jawab semua pertanyaan dalam Bahasa Indonesia dengan gaya yang natural dan ramah.")
+        
+        return chatbot.chat(modified_prompt)
     except Exception as e:
-        import traceback
-        error_details = traceback.format_exc()
-        print(f"Detailed error: {error_details}")  # This will show in your logs
-        return f"Error occurred: {str(e)}"
-# User-provided prompt
-if prompt := st.chat_input(disabled=not (hf_email and hf_pass)):
+        return f"Terjadi kesalahan: {str(e)}"
+
+# Area chat
+st.write("💡 Ketik pesan Anda di bawah ini")
+
+# User input
+if prompt := st.chat_input("Ketik pesan Anda..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.write(prompt)
 
-# Generate a new response if last message is not from assistant
-if st.session_state.messages[-1]["role"] != "assistant":
-    with st.chat_message("assistant"):
-        with st.spinner("Thinking..."):
-            response = generate_response(prompt, hf_email, hf_pass) 
-            st.write(response) 
-    message = {"role": "assistant", "content": response}
-    st.session_state.messages.append(message)
+    # Generate response
+    if st.session_state.messages[-1]["role"] != "assistant":
+        with st.chat_message("assistant"):
+            with st.spinner("Sedang berpikir..."):
+                response = generate_response(prompt, hf_email, hf_pass)
+                st.write(response)
+                
+        message = {"role": "assistant", "content": response}
+        st.session_state.messages.append(message)
+
+# Tampilkan riwayat chat
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.write(message["content"])
+
+# Informasi tambahan
+st.sidebar.markdown("---")
+st.sidebar.markdown("### ℹ️ Informasi")
+st.sidebar.markdown("""
+- Chat ini menggunakan model HuggingFace
+- Diperlukan akun HuggingFace untuk menggunakan layanan ini
+- Semua jawaban dalam Bahasa Indonesia
+""")
