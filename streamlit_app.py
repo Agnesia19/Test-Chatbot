@@ -2,7 +2,7 @@ import streamlit as st
 from hugchat import hugchat
 from hugchat.login import Login
 
-st.title("💬 HugChat Indonesia")
+st.title("💬 HugChat")
 
 # Inisialisasi session state untuk menyimpan pesan
 if "messages" not in st.session_state:
@@ -63,7 +63,6 @@ for message in st.session_state.messages:
 st.sidebar.markdown("---")
 st.sidebar.markdown("### ℹ️ Informasi")
 st.sidebar.markdown("""
-- Chat ini menggunakan model HuggingFace
 - Diperlukan akun HuggingFace untuk menggunakan layanan ini
-- Semua jawaban dalam Bahasa Indonesia
+
 """)
